@@ -1,0 +1,17 @@
+# 统一换行符：仓库里存 LF，检出时由 git 决定
+* text=auto eol=lf
+
+# Windows 脚本保持 CRLF，否则记事本打开会挤成一行
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# 明确标记二进制，避免任何行尾转换
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.pdf binary
+*.mp3 binary
+
+# JSON 是文本，而且 dict_seed.json / lex_irregular.json 会人工编辑，
+# 保留 diff 能力（生成出来的大 JSON 已在 .gitignore 里排除）
+*.json text eol=lf
