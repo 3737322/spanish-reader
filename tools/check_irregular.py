@@ -13,7 +13,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import conjugate as C
 
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 irr = json.load(io.open(os.path.join(ROOT, "data", "lex_irregular.json"), encoding="utf-8"))
 
 by_verb = collections.defaultdict(set)

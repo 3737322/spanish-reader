@@ -8,7 +8,7 @@
 ## 快速开始
 
 ```powershell
-cd C:\harness工作区\spanish-reader
+cd spanish-reader          # 你克隆下来的目录
 python serve.py
 ```
 

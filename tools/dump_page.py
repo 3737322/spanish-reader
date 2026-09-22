@@ -2,7 +2,7 @@
 """Dump one page's raw OCR (both engines, with pixel boxes) into a readable file."""
 import json, io, os, sys
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 raw = json.load(io.open(os.path.join(ROOT, "data", "ocr_all.json"), encoding="utf-8-sig"))
 want = [int(x) for x in sys.argv[1].split(",")]

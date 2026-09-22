@@ -4,7 +4,7 @@ import json, sys, io
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-path = sys.argv[1] if len(sys.argv) > 1 else r"C:\harness工作区\spanish-reader\data\ocr_test.json"
+path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "data", "ocr_all.json")
 which = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 else [0, 1]
 
 with io.open(path, encoding="utf-8-sig") as f:

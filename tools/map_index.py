@@ -2,7 +2,7 @@
 """Map the extent of the book's master vocabulary index (总词汇表) and count entries."""
 import json, io, os, re, sys
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 raw = json.load(io.open(os.path.join(ROOT, "data", "ocr_all.json"), encoding="utf-8-sig"))
 pages = json.load(io.open(os.path.join(ROOT, "data", "pages.json"), encoding="utf-8"))
 

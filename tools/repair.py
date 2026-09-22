@@ -28,7 +28,7 @@ verbs = generated conjugations (+ curated irregulars), low = corpus-frequent.
 import json, io, os, re, sys, collections
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPANISH = re.compile(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+$")
 ACC = str.maketrans("áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN")
 

@@ -18,6 +18,7 @@ import sys
 
 OBJ_RE = re.compile(rb"(?<![0-9])(\d{1,7})\s+(\d{1,5})\s+obj\b")
 WS = b"\x00\t\n\x0c\r "
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Obj:
@@ -148,8 +149,8 @@ def resolve_pages(data, objs, root_num):
 
 
 def main():
-    pdf = sys.argv[1] if len(sys.argv) > 1 else r"C:\harness工作区\spanish-reader\textbook.pdf"
-    outdir = sys.argv[2] if len(sys.argv) > 2 else r"C:\harness工作区\spanish-reader\pages_raw"
+    pdf = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "textbook.pdf")
+    outdir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "pages_raw")
     os.makedirs(outdir, exist_ok=True)
 
     with open(pdf, "rb") as f:

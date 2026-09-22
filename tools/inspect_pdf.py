@@ -4,9 +4,11 @@ import re, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from extract_pages import index_objects, parse_dict
 
-pdf = r"C:\harness工作区\spanish-reader\textbook.pdf"
+pdf = os.path.join(ROOT, "textbook.pdf")
 with open(pdf, "rb") as f:
     data = f.read()
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 objs = index_objects(data)
 
 page_nums = [n for n in sorted(objs)

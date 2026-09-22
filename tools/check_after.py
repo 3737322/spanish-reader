@@ -2,7 +2,7 @@
 """After repair: what is still unknown? Real Spanish, or junk from non-Spanish regions?"""
 import json, io, os, re, sys, collections
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAN = re.compile(r"[\u3400-\u9fff]")
 SPANISH = re.compile(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+$")
 ACC = str.maketrans("áéíóúüñÁÉÍÓÚÜÑ", "aeiouunAEIOUUN")

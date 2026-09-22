@@ -2,7 +2,7 @@
 """Print pages.json line text for a page range (into a file, for inspection)."""
 import json, io, os, sys
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 pages = json.load(io.open(os.path.join(ROOT, "data", "pages.json"), encoding="utf-8"))
 
 a, b = (int(x) for x in sys.argv[1].split("-"))

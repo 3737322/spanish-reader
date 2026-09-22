@@ -9,7 +9,7 @@ and sanity-check that boxes land inside the text area and form real lines.
 """
 import json, io, os, sys, collections
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 pages = json.load(io.open(os.path.join(ROOT, "data", "pages.json"), encoding="utf-8"))
 sizes = {s["file"]: s for s in json.load(io.open(os.path.join(ROOT, "pages", "_sizes.json"), encoding="utf-8-sig"))}

@@ -1837,8 +1837,8 @@ function boot(){
          ' —— 便携版的数据是内嵌在 index.html 里的，出现这个错误通常说明文件被截断或损坏，' +
          '请重新完整解压一次压缩包（注意 pages 文件夹要和 index.html 放在同一层）。')
       : (String(err && err.message || err) +
-         ' —— 请确认已从站点根目录（C:\\harness工作区\\spanish-reader\\）启动本地服务，' +
-         '并可通过 /data/pages.json 访问数据。'));
+         ' —— 请在项目根目录下执行 python serve.py 启动本地服务，' +
+         '并确认浏览器访问的是 /web/index.html 而不是直接双击文件。'));
   });
 }
 

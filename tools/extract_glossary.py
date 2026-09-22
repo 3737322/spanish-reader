@@ -13,7 +13,7 @@ fuzzily and then derives the obvious inflected forms (base + feminine/plural).
 import json, io, os, re, sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 POS_SET = {"m", "f", "mf", "tr", "intr", "prnl", "adj", "adv", "pron", "prep",
            "conj", "interj", "art", "num", "inf", "pp", "v", "s", "loc",

@@ -17,7 +17,7 @@ Outputs
 import json, io, os, re, sys, collections
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JUNK_ZH = re.compile(r"[丿丆乁丨丶亅乀亠冫冖凵卩阝厶廴廾弋彐彡忄扌氵灬纟艹衤讠饣丬犭疒癶\u2e80-\u2fdf]")
 HAN = re.compile(r"[\u3400-\u9fff]")
 SHORT_TAIL = re.compile(r"^[a-záéíóúüñ]{1,3}$")

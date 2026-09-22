@@ -10,7 +10,7 @@ irregular verbs are merged in from data/lex_irregular.json when present.
 """
 import json, io, os, sys
 
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 AR = {
     "pres.": ["o", "as", "a", "amos", "áis", "an"],

@@ -2,7 +2,7 @@
 """Verify the repaired hotspot data: residual damage patterns + readability samples."""
 import json, io, os, re, sys, collections
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-ROOT = r"C:\harness工作区\spanish-reader"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 pages = json.load(io.open(os.path.join(ROOT, "data", "pages.json"), encoding="utf-8"))
 allw = [w for p in pages for w in p["words"]]

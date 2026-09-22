@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Scan a PDF's raw bytes to decide whether it has real text or is a scan."""
-import re, sys, collections
+import re, sys, collections, os
 
-path = sys.argv[1] if len(sys.argv) > 1 else r"C:\harness工作区\spanish-reader\textbook.pdf"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "textbook.pdf")
 
 with open(path, "rb") as f:
     data = f.read()
