@@ -45,6 +45,7 @@ def run(label, argv, need=None):
 
 
 run("字典与分词覆盖率", [sys.executable, os.path.join(HERE, "check_after.py")])
+run("词表页自动识别", [sys.executable, os.path.join(HERE, "check_vocab_detect.py")])
 run("热区几何对齐", [sys.executable, os.path.join(HERE, "verify_geometry.py")])
 run("残留 OCR 错误统计", [sys.executable, os.path.join(HERE, "verify.py")])
 run("变位表交叉验证", [sys.executable, os.path.join(HERE, "check_irregular.py")])

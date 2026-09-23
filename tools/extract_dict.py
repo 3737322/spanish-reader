@@ -17,6 +17,9 @@ one bogus row ("estar cop. Victor").
 """
 import json, io, os, re, sys, collections
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import vocab_pages
+
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAN = re.compile(r"[\u3400-\u9fff]")
@@ -25,8 +28,6 @@ LAT = re.compile(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑá�
 POS_TOK = re.compile(
     r"^(m|f|mf|m\.f|tr|intr|prnl|pron|adj|adv|prep|conj|interj|art|num|inf|p\.p|v|s|pl|loc|cop)\b",
     re.I)
-GLOSARIO_PAGES = range(294, 305)
-VOCAB_PAGES = [18, 34, 50, 66, 82, 100, 116, 132, 148, 166, 182, 200, 218, 238, 260, 278]
 
 
 CJK_JUNK = set(chr(c) for c in range(0x2E80, 0x2FE0)) | set(
@@ -204,16 +205,23 @@ def main():
     raw = json.load(io.open(os.path.join(ROOT, "data", "ocr_all.json"), encoding="utf-8-sig"))
     by_page = {int("".join(c for c in r["file"] if c.isdigit())): r for r in raw}
 
-    result = {"glosario": [], "vocabulario": []}
-    for label, pages in (("glosario", list(GLOSARIO_PAGES)), ("vocabulario", VOCAB_PAGES)):
-        for pno in pages:
-            rec = by_page.get(pno)
-            if not rec:
-                continue
-            es = merge_split(extract_page(rec))
-            es = [e for e in es if e["es"]]
-            result[label].append({"page": pno, "entries": es})
+    # 词表页靠版式与标题自动识别，不依赖任何页码 —— 换任何一本书都能用
+    print("\n=== 自动识别词表页 ===")
+    detected = vocab_pages.detect(raw, verbose=True)
+    if not detected:
+        print("  未能识别到任何词表页。")
+        print("  这不是错误：词典会退回「常用词库 + 在线查词」，只是没有课本官方释义。")
 
+    result = {"glosario": [], "vocabulario": []}
+    for pno, info in sorted(detected.items()):
+        rec = by_page.get(pno)
+        if not rec:
+            continue
+        es = merge_split(extract_page(rec))
+        es = [e for e in es if e["es"]]
+        result[info["kind"]].append({"page": pno, "entries": es})
+
+    print("")
     for label in result:
         rows = [e for blk in result[label] for e in blk["entries"]]
         withzh = [e for e in rows if e["zh"]]

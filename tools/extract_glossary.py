@@ -12,6 +12,9 @@ fuzzily and then derives the obvious inflected forms (base + feminine/plural).
 """
 import json, io, os, re, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import vocab_pages
+
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -108,15 +111,27 @@ def parse_line(text):
 
 def main():
     pages = json.load(io.open(os.path.join(ROOT, "data", "pages_ocr.json"), encoding="utf-8"))
-    lo, hi = 294, 304
+
+    # 词表页自动识别，不写死页码。这里把所有识别到的词表页都用来做
+    # 规范拼写词库 —— 词库只用于「识别」，覆盖越广纠错越准。
+    ocr_path = os.path.join(ROOT, "data", "ocr_all.json")
+    if os.path.exists(ocr_path):
+        detected = vocab_pages.detect_from_file(ocr_path)
+        wordlist_pages = set(detected)
+        print("自动识别到 %d 个词表页（不依赖页码）" % len(wordlist_pages))
+    else:
+        # 极端情况下的退化：拿不到原始 OCR 就扫描全部页
+        wordlist_pages = {p["page"] for p in pages}
+        print("!! 缺少 ocr_all.json，退化为扫描全部 %d 页" % len(wordlist_pages))
+
     lex = {}
     raw_entries = 0
     for p in pages:
-        if not (lo <= p["page"] <= hi):
+        if p["page"] not in wordlist_pages:
             continue
         for ln in p["lines"]:
             t = ln["t"].strip()
-            if not t or t.upper() == "GLOSARIO":
+            if not t or t.upper() in ("GLOSARIO", "VOCABULARIO"):
                 continue
             head = parse_line(t)
             if not head:
