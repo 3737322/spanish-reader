@@ -29,17 +29,27 @@ README = """西班牙语点读工具 · 便携版
 怎么用
 ------
 1. 把整个文件夹解压出来（不要只解压 index.html）
-2. 双击 index.html —— 用 Microsoft Edge 打开效果最好
+2. 双击「用Edge打开.bat」   ← 推荐，它会用 Edge 打开
+   （也可以直接双击 index.html，但那样可能被 Chrome 打开，发音会差很多）
 3. 打开后点任意西班牙语单词，即可听到发音并看到中文释义
 
 就这么简单。不需要安装任何东西，不需要联网也能阅读
 （只有发音和「在线查词」需要联网）。
 
+为什么一定要用 Edge
+-------------------
+本工具不内置音频，发音交给浏览器：
+· Edge 自带微软的西班牙语在线自然语音，音质好、发音准
+· Chrome 只能用系统里装的语音，而 Windows 默认只有中文语音，读不了
+  西班牙语，会退化成在线音频，效果差一截
+
+如果双击 .bat 没反应，就手动打开 Edge，把 index.html 拖进去。
+
 功能介绍
 --------
 · 原版版面点读：完整保留课本扫描版面，逐词点击
 · 点词发音    ：优先使用 Edge 的西班牙语自然语音
-· 点词翻译    ：内置 4700 余条西中词库，未收录的可一键在线查词
+· 点词翻译    ：内置数千条词库，未收录的可一键在线查词
 · 动词变位还原：点 tengo 会告诉你是 tener 的现在时第一人称单数
 · 整句朗读    ：点行号圆点，或按住 Alt 点击句中任意词
 · 全文搜索    ：忽略重音符号，输入 esta 也能搜到 está
@@ -52,17 +62,13 @@ README = """西班牙语点读工具 · 便携版
   Esc         关闭词卡
   Ctrl + 滚轮  缩放页面
 
-发音说明（重要）
-----------------
-本工具不内置音频，发音由浏览器负责：
+如果听不到声音
+--------------
+工具栏下方有一行小字，显示当前用的是哪一级语音：
 
-  · 用 Edge 打开：走微软在线自然语音，西语发音质量最好
-  · 用 Chrome 打开：本机若没装西班牙语语音包，会降级用在线 TTS 音频
-  · 工具栏下方会显示当前用的是哪一级语音
-
-如果完全听不到声音，检查两件事：
-  1. 是不是用 Edge 打开的
-  2. 电脑是否联网
+  「系统语音」   正常，音质最好
+  「在线音频」   没检测到西语系统语音，已自动降级（仍能出声）
+  「不可用」     两样都失败，检查是否联网
 
 想彻底离线发音：Windows 设置 → 时间和语言 → 语言和区域 →
 添加「西班牙语(西班牙)」并勾选「语音」，装完刷新页面即可。
@@ -84,6 +90,30 @@ A: 图片和排版是为电脑屏幕做的，手机上能打开但读起来偏�
 版权提示
 --------
 本工具仅供个人学习使用。教材内容版权归原出版社所有，请勿公开传播或商用。
+"""
+
+# 启动器：绕开「双击 html 被 Chrome 打开 → 没有西语发音」这个最常见的坑。
+# 内容刻意只用 ASCII —— .bat 里的中文受控制台代码页影响，在非中文 Windows 上会乱码，
+# 而文件名用中文没问题（文件名由文件系统处理，不走批处理的代码页）。
+LAUNCHER = r"""@echo off
+rem Opens the reader in Microsoft Edge, which is the browser that actually
+rem has a good Spanish voice on a stock Windows machine.
+setlocal
+set "HERE=%~dp0"
+set "EDGE=%ProgramFiles(x86)%\Microsoft Edge\Application\msedge.exe"
+if not exist "%EDGE%" set "EDGE=%ProgramFiles%\Microsoft Edge\Application\msedge.exe"
+
+if exist "%EDGE%" (
+  start "" "%EDGE%" "%HERE%index.html"
+) else (
+  echo.
+  echo Microsoft Edge was not found on this machine.
+  echo Opening with the default browser instead.
+  echo.
+  echo If you hear no Spanish audio, please open index.html with Edge manually.
+  echo.
+  start "" "%HERE%index.html"
+)
 """
 
 
@@ -149,6 +179,13 @@ def main():
 
     with io.open(os.path.join(DIST, "使用说明.txt"), "w", encoding="utf-8") as f:
         f.write(README)
+
+    # 启动器必须用 GBK-ASCII 之外的编码？不需要：内容全是 ASCII，
+    # 但换行用 CRLF，否则老式 cmd 解析会出问题。
+    launcher = os.path.join(DIST, "用Edge打开.bat")
+    with io.open(launcher, "w", encoding="ascii", newline="\r\n") as f:
+        f.write(LAUNCHER)
+    print("  wrote 用Edge打开.bat (%d bytes)" % os.path.getsize(launcher))
 
     grand = os.path.getsize(dst_html) + total
     print("\n  dist: %s" % DIST)

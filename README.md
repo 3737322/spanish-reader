@@ -313,10 +313,17 @@ python tools\build_portable.py     # 生成 dist\西班牙语点读便携版\
 dist\西班牙语点读便携版\
   index.html      ← 7 MB，内联了 pages / dict / lemmas 三份数据
   pages\          ← 305 张页面图
+  用Edge打开.bat   ← 启动器：双击它就是用 Edge 打开
   使用说明.txt     ← 给接收者看的说明
 ```
 
-接收者**解压后双击 `index.html` 即可**，不需要 Python、不需要服务器、不需要装任何东西。
+接收者**解压后双击「用Edge打开.bat」即可**，不需要 Python、不需要服务器、不需要装任何东西。
+
+> **为什么要有这个 .bat**：推荐给别人时最容易翻车的不是安装，而是对方双击
+> `index.html` 被 Chrome 打开了 —— 而 Chrome 用系统语音，Windows 默认只有中文语音，
+> 读不了西班牙语，对方就会说"你这个没声音"。
+> 启动器直接用 Edge 打开，从源头避免这个误会（找不到 Edge 才退回默认浏览器）。
+> 它刻意只用 ASCII 内容：`.bat` 里的中文受控制台代码页影响，在非中文 Windows 上会乱码。
 
 验证：
 

@@ -101,6 +101,20 @@ ok(blobEnd > blobStart, 'data blob is terminated by a real </script>');
   ok(fs.existsSync(path.join(DIST, '使用说明.txt')), '使用说明.txt present');
   ok(!fs.existsSync(path.join(DIST, 'data')), 'no data/ folder leaked into the portable build');
 
+  // 启动器：让接收者双击就用 Edge 打开，绕开「被 Chrome 打开 → 没声音」这个坑
+  const launcher = path.join(DIST, '用Edge打开.bat');
+  ok(fs.existsSync(launcher), 'launcher 用Edge打开.bat present');
+  if (fs.existsSync(launcher)) {
+    const lb = fs.readFileSync(launcher);
+    const lt = lb.toString('ascii');
+    ok([...lb].every(b => b < 128), 'launcher is pure ASCII (cmd would mangle non-ASCII)');
+    ok(lt.includes('\r\n'), 'launcher uses CRLF line endings');
+    ok(/msedge\.exe/i.test(lt), 'launcher targets msedge.exe');
+    ok(/index\.html/.test(lt), 'launcher opens index.html');
+    ok(/ProgramFiles/i.test(lt), 'launcher probes the known Edge install locations');
+    ok(/start "" /i.test(lt), 'launcher falls back to the default browser if Edge is absent');
+  }
+
   // ------------------------------------------------ TTS cache / prefetch
   console.log('\n--- 语音响应速度相关行为 ---');
   audioLog.length = 0;
