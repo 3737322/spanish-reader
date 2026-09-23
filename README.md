@@ -46,19 +46,57 @@ http://127.0.0.1:8765/web/index.html
 完整流程：
 
 ```powershell
-git clone <你的仓库地址>
+git clone https://github.com/3737322/spanish-reader.git
 cd spanish-reader
-# 把你自己的 textbook.pdf 放到仓库根目录
-python tools\run_all.py        # 抽出扫描页 → OCR → 纠错 → 建词典
-python serve.py                # 打开 http://127.0.0.1:8765/web/index.html
+
+# 1. 把你自己的教材 PDF 放到这个目录，命名必须是 textbook.pdf
+#    （仓库里不含教材，见上表）
+
+# 2. 一条命令从 PDF 构建出全部数据：抽页 → 缩放 → OCR → 纠错 → 建词典 → 建热区
+python tools\run_all.py
+
+# 3. 启动
+python serve.py
+#    然后在 Edge 里打开 http://127.0.0.1:8765/web/index.html
+```
+
+**第一次大约 5 分钟**，其中 OCR 占 2.5 分钟（305 页 × 2 个语言引擎）。
+中途断掉没关系，**重跑会跳过已完成的步骤**，不必从头再来。
+
+构建完成后目录里会多出：
+
+| 新增 | 说明 |
+|---|---|
+| `pages_raw/` | 从 PDF 抽出的原始扫描图（约 190 MB） |
+| `pages/` | 缩放后供网页展示的图（约 93 MB） |
+| `data/pages.json` | 逐词热区 |
+| `data/dict.json` | 西中词典 |
+| `data/lemmas.json` | 动词变位表 |
+
+可选：
+
+```powershell
+python tools\check_all.py          # 8 个自检套件
+python tools\build_portable.py     # 生成免服务器的便携版（可发给不想装 Python 的人）
 ```
 
 **依赖**：Python 3.8+、Windows PowerShell 5.1（用系统自带 OCR）、Node.js（仅自检用）。
 **第三方库一个都不需要** —— 整条流水线只用标准库。
 
-> OCR 那一步用的是 `Windows.Media.Ocr`，所以**必须在 Windows 上跑**。
-> 换别的 OCR 引擎需要重写 `tools/repair.py` 的纠错规则表（那套规则是针对
-> Windows OCR 的错误模式总结出来的）。
+> **必须在 Windows 上跑。** OCR 那一步用的是 `Windows.Media.Ocr`，
+> Mac / Linux 没有这个引擎。想换平台得改用 Tesseract 之类的 OCR，
+> 并重写 `tools/repair.py` 的纠错规则表（那套规则是针对 Windows OCR
+> 的错误模式总结出来的，换引擎就不适用了）。
+
+### 这个仓库对谁有用
+
+| 你是谁 | 能不能用 | 怎么做 |
+|---|---|---|
+| **只想点读某本西语教材** | ❌ 用不了 | 仓库里没有教材内容，去找已经构建好的成品 |
+| **自己也有扫描版教材 / 外文书** | ✅ 最合适 | 放好 PDF，跑 `run_all.py`，几分钟就有自己的点读版 |
+| **想改成别的语种或界面** | ✅ | 读 `tools/` 和 `web/index.html`，全是标准库和原生 JS |
+
+一句话：**这里开源的是流水线，不是教材。**
 
 ---
 
@@ -69,7 +107,7 @@ python serve.py                # 打开 http://127.0.0.1:8765/web/index.html
 | **原版版面点读** | 完整保留课本扫描版面（插图、表格、双栏），逐词叠加点击热区，共 35572 个可点词 |
 | **点词发音** | 三级降级链：Edge 西语自然语音 → Google 在线 TTS → 明确提示不可用 |
 | **点词翻译** | 本地词库优先，未命中可一键在线查词 |
-| **动词变位还原** | 点 `tengo` 会告诉你这是 `tener` 的现在时第一人称单数，并给出释义（64414 个词形，含 142 个不规则动词） |
+| **动词变位还原** | 点 `tengo` 会告诉你这是 `tener` 的现在时第一人称单数，并给出释义（49875 个词形，含 142 个不规则动词） |
 | **整句朗读** | 点行号圆点或 Alt+点击句中任意词，朗读整行并高亮 |
 | **全文搜索** | 忽略重音符号（`esta` 能搜到 `está`） |
 | **生词本** | ⭐ 收藏、导出 txt；记录阅读进度，下次自动回到上次页码 |
