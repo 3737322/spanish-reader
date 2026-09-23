@@ -101,6 +101,14 @@ def extract_page(rec):
         col = find_chinese_column(han, lo, hi)
         side_lat = [w for w in latin if lo <= w["x"] + w["w"] / 2.0 < hi]
         side_han = [w for w in han if lo <= w["x"] < hi and (col is None or w["x"] >= col - 60)]
+
+        # 单栏书（词与释义恰好分居中线的两侧）会被上面的硬切分拆散：
+        # 这一半只有词、一个释义都没有。此时放宽到整页去找释义列，
+        # 否则会出现「17 条词目只配上 1 条释义」这种情况。
+        if side_lat and not side_han:
+            col = find_chinese_column(han, 0.0, pw)
+            side_han = [w for w in han if (col is None or w["x"] >= col - 60)]
+
         for row in cluster_rows(sorted(side_lat + side_han, key=lambda w: w["y"] + w["h"] / 2.0)):
             row.sort(key=lambda w: w["x"])
             es, pos, zhp = [], [], []

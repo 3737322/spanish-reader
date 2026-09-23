@@ -4,36 +4,56 @@
 # 这个仓库只放「工具」。教材 PDF、扫描页、以及从课本词表抽取出来的释义都是
 # 受版权保护的内容或其衍生作品，公开仓库等于向公众传播。
 # 使用者应当自备合法获得的 PDF，然后自己跑 tools/run_all.py 生成这些文件。
+#
+# 注意：带尾斜杠的目录模式（如 pages/）会匹配**任意层级**的同名目录，
+# 所以这里全部用前导斜杠锚定到仓库根，否则会把 demo/pages/ 一起忽略掉。
 # ============================================================================
 
 # 原始教材
-textbook.pdf
+/textbook.pdf
 *.pdf
 !docs/**/*.pdf
 
 # 扫描页（从 PDF 抽出 / 缩放得到）
-pages_raw/
-pages/
-dist/
+/pages_raw/
+/pages/
+/dist/
 
 # 从课本抽取的内容（衍生作品）
-data/pages.json
-data/pages_ocr.json
-data/ocr_all.json
-data/ocr_for_correction.json
-data/vocab_raw.json
-data/lex_glossary.json
-data/dict.json
+/data/pages.json
+/data/pages_ocr.json
+/data/ocr_all.json
+/data/ocr_for_correction.json
+/data/vocab_raw.json
+/data/lex_glossary.json
+/data/dict.json
 
 # 生成物（可随时由 run_all.py 重建）
-data/lex_verbs.json
-data/lemmas.json
-data/dict_stats.json
+/data/lex_verbs.json
+/data/lemmas.json
+/data/dict_stats.json
 
 # 诊断输出
-data/_*.txt
-data/_*.log
-cache/
+/data/_*.txt
+/data/_*.log
+/cache/
+
+# ---------------------------------------------------------------------------
+# 演示目录：只提交成品，中间产物不入库
+#   提交： demo/pages/*.jpg  demo/data/{pages,dict,lemmas}.json
+#   忽略： 下面这些重建得出来的东西
+# ---------------------------------------------------------------------------
+/demo/data/ocr_all.json
+/demo/data/ocr_for_correction.json
+/demo/data/pages_ocr.json
+/demo/data/vocab_raw.json
+/demo/data/lex_glossary.json
+/demo/data/lex_verbs.json
+/demo/data/lex_irregular.json
+/demo/data/dict_seed.json
+/demo/data/dict_extra.json
+/demo/data/dict_stats.json
+/demo/data/_*
 
 # ---------------------------------------------------------------------------
 # 下面这些是「工具自带、可公开」的数据，故意不忽略：

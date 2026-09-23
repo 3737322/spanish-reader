@@ -40,6 +40,14 @@ import webbrowser
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
+# ------------------------------------------------------------------ demo mode
+# 刚克隆仓库的人还没有自己的教材数据。这时自动切到内置演示（demo/），
+# 让 python serve.py 立刻能看到阅读器在跑，而不是一片白屏。
+# 演示内容是合成的公版书页，见 tools/build_demo.py。
+DEMO_DIR = os.path.join(ROOT, "demo")
+SERVE_DEMO = (not os.path.exists(os.path.join(ROOT, "data", "pages.json"))
+              and os.path.exists(os.path.join(DEMO_DIR, "data", "pages.json")))
+
 # ---------------------------------------------------------------- TTS cache
 TTS_DIR = os.path.join(ROOT, "cache", "tts")
 TTS_UPSTREAM = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q="
@@ -219,6 +227,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass                                   # user clicked another word mid-download
 
+    # -- 演示模式：/web/* 仍取自仓库根，数据与图片取自 demo/ --------------
+    def translate_path(self, path):
+        if SERVE_DEMO:
+            clean = urllib.parse.urlparse(path).path
+            if not clean.startswith("/web/"):
+                saved = self.directory
+                self.directory = DEMO_DIR
+                try:
+                    return super().translate_path(path)
+                finally:
+                    self.directory = saved
+        return super().translate_path(path)
+
     # -- headers ---------------------------------------------------------
     def end_headers(self):
         if self._cc is None:
@@ -250,9 +271,15 @@ def main():
     url = "http://127.0.0.1:%d/web/index.html" % port
     with Server(("127.0.0.1", port), Handler) as httpd:
         print("=" * 62)
-        print("  西班牙语点读工具 已启动")
+        print("  点读工具已启动")
         print("  %s" % url)
         print("")
+        if SERVE_DEMO:
+            print("  ★ 演示模式：没有找到你自己构建的数据（data/pages.json），")
+            print("    已自动切到内置演示（demo/，3 页合成的公版书页）。")
+            print("    想构建自己的教材：把 textbook.pdf 放进来，跑")
+            print("        python tools/run_all.py")
+            print("")
         print("  用 Microsoft Edge 打开（Edge 有西班牙语在线自然语音）")
         print("  发音会经 /tts 缓存到 cache/tts/，同一个词只听一次就够")
         print("  按 Ctrl+C 停止")

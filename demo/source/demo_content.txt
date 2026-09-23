@@ -1,0 +1,76 @@
+# 演示内容（内置样例教材）
+#
+# 为什么用这种朴素的竖线分隔格式，而不是 JSON：
+#   渲染脚本是 Windows PowerShell 5.1 的。ConvertFrom-Json 产生的
+#   PSCustomObject 在 5.1 里的属性访问有诡异的坑 —— $b.es 在表达式里能取到值、
+#   在赋值/命令模式下却得到空，而且**不报任何错**，表现为整列文字凭空消失。
+#   排查代价极高。改成纯字符串数组后，-split '|' 的结果是普通数组，
+#   不涉及任何对象、属性、类型转换，行为完全可预期。
+#
+# 格式（每行一条，字段用 | 分隔，正文里不要出现 | ）：
+#   PAGE|<页标题>            开始新的一页
+#   H|<文字>|<字号>          大标题
+#   S|<文字>|<字号>          小标题
+#   R|                       水平分隔线
+#   P|<文字>|<字号>          正文段落（自动换行）
+#   Z|<文字>|<字号>          中文行
+#   I|<文字>|<字号>          列表项
+#   SP|                      垂直留白
+#   V|<西语词>|<词性>|<释义>  词表三列
+#
+# 版权：正文取自塞万提斯《堂吉诃德》开篇（公版，1615 年），
+#       词汇表与练习题为本项目自写，均无版权问题。
+# ============================================================================
+
+PAGE|LECCIÓN 1 · Una lectura clásica
+H|LECCIÓN 1|40
+S|Una lectura clásica|28
+R|
+P|En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.|26
+P|Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lentejas los viernes y algún palomino de añadidura los domingos, consumían las tres partes de su hacienda.|26
+SP|
+S|Preguntas|26
+Z|请根据课文回答下列问题：|24
+I|1. ¿Dónde vivía el hidalgo?|25
+I|2. ¿Qué comía los sábados?|25
+I|3. ¿Cómo se llamaba su caballo?|25
+
+PAGE|VOCABULARIO
+H|VOCABULARIO|38
+R|
+V|lugar|m.|地方，地点
+V|nombre|m.|名字，名称
+V|tiempo|m.|时间；天气
+V|vivir|intr.|居住；生活
+V|caballo|m.|马
+V|comer|tr.|吃
+V|noche|f.|夜晚
+V|sábado|m.|星期六
+V|domingo|m.|星期日
+V|antiguo, gua|adj.|古老的，旧的
+V|flaco, ca|adj.|瘦的
+V|mucho, cha|adj.|很多的
+V|querer|tr.|想要；爱
+V|acordarse|prnl.|记得，想起
+V|siempre|adv.|总是，一直
+V|también|adv.|也，同样
+V|porque|conj.|因为
+V|juntos, tas|adj.|一起的
+
+PAGE|EJERCICIOS
+H|EJERCICIOS|38
+R|
+Z|一、用适当的冠词填空：|24
+I|1. ____ hidalgo vivía en ____ lugar de la Mancha.|25
+I|2. Quiero acordarme de ____ nombre.|25
+I|3. Los sábados comía ____ duelos y quebrantos.|25
+SP|
+Z|二、把下列句子译成西班牙语：|24
+I|1. 他住在一个小村庄里。|25
+I|2. 我不记得他的名字。|25
+I|3. 我们星期天也工作。|25
+SP|
+Z|三、朗读下列句子，注意重音：|24
+I|1. Él vivía en un lugar muy pequeño.|25
+I|2. Todos los días comíamos juntos.|25
+I|3. ¿Por qué quieres acordarte de mí?|25

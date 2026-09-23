@@ -25,10 +25,11 @@
 
 ---
 
-## 快速开始
+## 就这么简单
 
 ```powershell
-cd spanish-reader          # 你克隆下来的目录
+git clone https://github.com/3737322/spanish-reader.git
+cd spanish-reader
 python serve.py
 ```
 
@@ -37,6 +38,12 @@ python serve.py
 ```
 http://127.0.0.1:8765/web/index.html
 ```
+
+**刚克隆下来还没有教材数据时，会自动切到内置演示** —— 3 页合成的样例教材
+（正文取自公版的《堂吉诃德》开篇，词汇表与练习题为本项目自写），
+让你立刻看到阅读器在跑，而不是一片白屏。
+
+想换成自己的书：把 PDF 放进来，跑 `python tools\run_all.py` 即可（见下文）。
 
 > **为什么强调 Edge**：Windows 默认只装中文语音，没有西班牙语语音包。
 > Edge 自带微软**在线自然语音**（Elvira / Álvaro / Dalia 等 es-ES / es-MX），
@@ -278,6 +285,8 @@ spanish-reader/
    ├─ vocab_pages.py         ★ 词表页自动识别（三条线索，不看页码）
    ├─ extract_dict.py        词表页 → 词典条目（含释义）
    ├─ build_dict.py          合并词典
+   ├─ build_demo.py          ★ 构建内置演示（渲染 → OCR → 跑真正的流水线）
+   ├─ make_demo_pages.ps1    渲染演示页（WPF 画字 → JPEG）
    ├─ dom_shim.js            可观测的 DOM/Audio 替身（供下面的检查用）
    ├─ check_ui.js            前端静态检查 + 查词覆盖率回放
    ├─ check_server_mode.js   服务器版阅读器行为断言
